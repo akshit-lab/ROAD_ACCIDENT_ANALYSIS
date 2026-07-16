@@ -303,19 +303,29 @@ elif page == "⏰ Time Analysis":
     st.title("Time-Based Analysis")
 
     col1, col2 = st.columns(2)
+    
     with col1:
-        st.subheader("Accidents by Hour")
-        by_hour = df.groupby("hour").size().reset_index(name="count")
-        fig = px.bar(by_hour, x="hour", y="count", template=PLOTLY_TEMPLATE,
-                     color_discrete_sequence=["#E63946"])
-        st.plotly_chart(fig, width='stretch')
-    with col2:
-        st.subheader("Vehicles Involved by Hour")
-        by_hour2 = df.groupby("hour")["Number_of_vehicles_involved"].mean().reset_index()
-        fig = px.bar(by_hour2, x="hour", y="Number_of_vehicles_involved", template=PLOTLY_TEMPLATE,
-                     color_discrete_sequence=["#FFB703"])
-        st.plotly_chart(fig, width='stretch')
+     st.subheader("Accidents by Hour")
+    by_hour = df.groupby("hour").size().reset_index(name="count")
+    fig = px.bar(by_hour, x="hour", y="count", template=PLOTLY_TEMPLATE,
+                 color="count", color_continuous_scale=["#1A1A24", "#FFB703", "#E63946"])
+    fig.update_layout(height=380, coloraxis_showscale=False,
+                       xaxis=dict(dtick=1, title="Hour of Day"), yaxis_title="Accidents")
+    fig.update_traces(marker_line_width=0)
+    st.plotly_chart(fig, width='stretch')
 
+    with col2:
+     st.subheader("Vehicles Involved by Hour")
+    by_hour2 = df.groupby("hour")["Number_of_vehicles_involved"].mean().reset_index()
+    fig = px.line(by_hour2, x="hour", y="Number_of_vehicles_involved", template=PLOTLY_TEMPLATE,
+                  markers=True, color_discrete_sequence=["#FFB703"])
+    fig.update_traces(line=dict(width=3), marker=dict(size=7))
+    fig.update_layout(height=380, xaxis=dict(dtick=1, title="Hour of Day"),
+                       yaxis=dict(title="Avg Vehicles Involved", range=[
+                           by_hour2["Number_of_vehicles_involved"].min() - 0.2,
+                           by_hour2["Number_of_vehicles_involved"].max() + 0.2
+                       ]))
+    st.plotly_chart(fig, width='stretch')
 # ===========================================================
 # PAGE: INSIGHTS
 # ===========================================================
