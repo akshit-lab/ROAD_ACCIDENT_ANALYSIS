@@ -227,7 +227,7 @@ elif page == "📈 Analytics":
     st.title("Accident Analytics")
     st.caption(f"Analyzing {len(df):,} records after filters")
 
-    t1, t2, t3, t4 = st.tabs(["By Vehicle Type", "By Severity", "Weather vs Casualties", "Correlation"])
+    t1, t2, t3, t4 ,t5 = st.tabs(["By Vehicle Type", "By Severity", "Weather vs Casualties", "Correlation", "Accidents by Day of Week"])
 
     with t1:
         top_vehicles = df.Type_of_vehicle.value_counts().head(6).index
@@ -264,6 +264,20 @@ elif page == "📈 Analytics":
         corr = df[numeric_cols].corr()
         fig = px.imshow(corr, text_auto=".2f", template=PLOTLY_TEMPLATE, color_continuous_scale=["#FFB703", "#1A1A24", "#E63946"], zmin=-1, zmax=1)
         st.plotly_chart(fig, width='stretch')
+
+    with t5:
+       st.subheader("Accidents by Day of Week")
+
+       DAY_ORDER = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+       by_day = df["Day_of_week"].value_counts().reindex(DAY_ORDER).reset_index()
+       by_day.columns = ["day", "count"]
+
+       fig = px.line_polar(by_day, r="count", theta="day", line_close=True,
+                     template=PLOTLY_TEMPLATE, color_discrete_sequence=["#E63946"])
+       fig.update_traces(fill="toself", fillcolor="rgba(230,57,70,0.35)")
+       fig.update_layout(height=450)
+       st.plotly_chart(fig, width='stretch')
+    
 
 # ===========================================================
 # PAGE: DRIVER EXPLORER
