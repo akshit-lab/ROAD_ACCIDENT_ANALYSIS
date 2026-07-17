@@ -266,8 +266,6 @@ elif page == "📈 Analytics":
         st.plotly_chart(fig, width='stretch')
 
     with t5:
-       st.subheader("Accidents by Day of Week")
-
        DAY_ORDER = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
        by_day = df["Day_of_week"].value_counts().reindex(DAY_ORDER).reset_index()
        by_day.columns = ["day", "count"]
