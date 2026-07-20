@@ -171,18 +171,15 @@ This project analyzes:
     c5.metric("Columns", df.shape[1])
 
     st.divider()
-    # col1, col2 = st.columns(2)
-
-    # with col1:
+    
     st.subheader("Top Vehicle Types by Accidents")
     counts = df.Type_of_vehicle.value_counts().head(8).reset_index()
     counts.columns = ["vehicle", "count"]
     fig = px.bar(counts, x="count", y="vehicle", orientation="h",
                      template=PLOTLY_TEMPLATE, color="vehicle", color_discrete_sequence=COLOR_SEQ)
-    fig.update_layout(showlegend=True, yaxis={"categoryorder": "total ascending"})
+    fig.update_layout(showlegend=False, yaxis={"categoryorder": "total ascending"})
     st.plotly_chart(fig, width='stretch')
 
-    # with col2:
     st.subheader("Avg Casualties by Hour")
     by_hour = df.groupby("hour")["Number_of_casualties"].mean().reset_index()
     fig = px.line(by_hour, x="hour", y="Number_of_casualties", template=PLOTLY_TEMPLATE, markers=True, color_discrete_sequence=["#E63946"])
